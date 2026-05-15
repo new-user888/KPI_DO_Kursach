@@ -31,11 +31,10 @@ from src.visualize import (
     plot_structure_experiment,
 )
 
-_ROOT       = os.path.dirname(os.path.abspath(__file__))
-RESULTS_DIR = os.path.join(_ROOT, "results")
-OUTPUT_DIR  = os.path.join(_ROOT, "output")
-TASKS_DIR   = os.path.join(OUTPUT_DIR, "tasks")
-EXP_DIR     = os.path.join(OUTPUT_DIR, "experiments")
+_ROOT     = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_DIR = os.path.join(_ROOT, "output")
+TASKS_DIR  = os.path.join(OUTPUT_DIR, "tasks")
+EXP_DIR    = os.path.join(OUTPUT_DIR, "experiments")
 
 # Глобальний стан сесії
 _problem:       Optional[Problem]  = None
@@ -501,7 +500,7 @@ def _menu_solve():
 
 def _exp_individual():
     _header("Розв'язання 4 індивідуальних задач")
-    _ensure_dirs(RESULTS_DIR, TASKS_DIR)
+    _ensure_dirs(TASKS_DIR, EXP_DIR)
     rows = []
     for k, task in enumerate(all_tasks(), 1):
         print(f"\n  Задача {k}: {task.name}  ({task.m}×{task.n}, |A|={len(task.A)})")
@@ -532,14 +531,14 @@ def _exp_individual():
             "ls_Q": S_LS.Q(), "ls_cost": int(S_LS.cost()),
             "ls_t_ms": round(t_LS, 2), "improvement": imp,
         })
-    _write_csv(os.path.join(RESULTS_DIR, "individual_tasks.csv"), rows)
-    print(f"\n  CSV: results/individual_tasks.csv")
+    _write_csv(os.path.join(TASKS_DIR, "individual_tasks.csv"), rows)
+    print(f"\n  CSV: output/tasks/individual_tasks.csv")
     print(f"  PNG: output/tasks/task{{1-4}}_*.png")
 
 
 def _exp_imax():
     _header("Вплив параметра I_max (β · |A|)")
-    _ensure_dirs(RESULTS_DIR, EXP_DIR)
+    _ensure_dirs(EXP_DIR)
     m, n, rho_F, s_F = 15, 15, 0.15, 2
     c1, c2, alpha_B, K2, R = 3, 8, 0.05, 3, 3
     betas = [0.01, 0.05, 0.25, 1, 2, 4, 8, 16]
@@ -556,24 +555,24 @@ def _exp_imax():
     try:
         plot_beta_experiment(betas, res["Q_means"], res["t_means"],
                              res["Q_stds"], res["t_stds"],
-                             filepath=os.path.join(RESULTS_DIR, "exp_beta.png"),
+                             filepath=os.path.join(EXP_DIR, "exp_beta.png"),
                              problem_info=f"{m}×{n}, R={R}")
-        print(f"\n  PNG: results/exp_beta.png")
+        print(f"\n  PNG: output/experiments/exp_beta.png")
     except Exception:
         pass
-    _write_csv(os.path.join(RESULTS_DIR, "beta_experiment.csv"), [
+    _write_csv(os.path.join(EXP_DIR, "beta_experiment.csv"), [
         {"beta": b, "Q_mean": round(qm, 4), "Q_std": round(qs, 4),
          "t_mean_s": round(tm, 6)}
         for b, qm, qs, tm, _ in zip(betas, res["Q_means"], res["Q_stds"],
                                      res["t_means"], res["t_stds"])
     ])
-    print(f"  CSV: results/beta_experiment.csv")
+    print(f"  CSV: output/experiments/beta_experiment.csv")
     print(f"  Час виконання: {elapsed:.1f} с")
 
 
 def _exp_budget():
     _header("Вплив бюджету (α_B)")
-    _ensure_dirs(RESULTS_DIR, EXP_DIR)
+    _ensure_dirs(EXP_DIR)
     m, n, rho_F, s_F = 14, 14, 0.12, 2
     c1, c2, K2, beta, R = 3, 8, 5, 4, 3
     alphas = [0.03, 0.05, 0.07, 0.10, 0.13, 0.16, 0.20, 0.25]
@@ -591,12 +590,12 @@ def _exp_budget():
     try:
         plot_budget_experiment(alphas, res["Q_G_means"], res["Q_LS_means"],
                                res["delta_means"], res["delta_stds"],
-                               filepath=os.path.join(RESULTS_DIR, "exp_budget.png"),
+                               filepath=os.path.join(EXP_DIR, "exp_budget.png"),
                                problem_info=f"{m}×{n}, R={R}")
-        print(f"\n  PNG: results/exp_budget.png")
+        print(f"\n  PNG: output/experiments/exp_budget.png")
     except Exception:
         pass
-    _write_csv(os.path.join(RESULTS_DIR, "budget_experiment.csv"), [
+    _write_csv(os.path.join(EXP_DIR, "budget_experiment.csv"), [
         {"alpha_B": a, "budget_mean": round(Bm, 1),
          "Q_G_mean": round(qg, 4), "Q_LS_mean": round(qls, 4),
          "delta_pct": round(100 * dm, 4)}
@@ -604,13 +603,13 @@ def _exp_budget():
                                            res["Q_G_means"], res["Q_LS_means"],
                                            res["delta_means"], res["delta_stds"])
     ])
-    print(f"  CSV: results/budget_experiment.csv")
+    print(f"  CSV: output/experiments/budget_experiment.csv")
     print(f"  Час виконання: {elapsed:.1f} с")
 
 
 def _exp_size():
     _header("Вплив розмірності парку")
-    _ensure_dirs(RESULTS_DIR, EXP_DIR)
+    _ensure_dirs(EXP_DIR)
     sizes = [(6, 6), (8, 8), (10, 10), (12, 12), (14, 14), (16, 16)]
     rho_F, s_F, c1, c2, alpha_B, K2, beta, R = 0.12, 2, 3, 8, 0.06, 3, 4, 3
     print(f"  ρ_F={rho_F},  c1={c1}, c2={c2},  α_B={alpha_B},  K2={K2},  β={beta},  R={R}")
@@ -629,12 +628,12 @@ def _exp_size():
         plot_size_experiment(res["sizes"], res["Q_G_means"], res["Q_LS_means"],
                              res["t_G_means"], res["t_LS_means"],
                              res["delta_means"], res["delta_stds"],
-                             filepath=os.path.join(RESULTS_DIR, "exp_size.png"),
+                             filepath=os.path.join(EXP_DIR, "exp_size.png"),
                              problem_info=f"R={R}")
-        print(f"\n  PNG: results/exp_size.png")
+        print(f"\n  PNG: output/experiments/exp_size.png")
     except Exception:
         pass
-    _write_csv(os.path.join(RESULTS_DIR, "size_experiment.csv"), [
+    _write_csv(os.path.join(EXP_DIR, "size_experiment.csv"), [
         {"m": m, "n": n, "size": m * n,
          "Q_G_mean": round(qg, 4), "Q_LS_mean": round(qls, 4),
          "t_G_s": round(tg, 6), "t_LS_s": round(tls, 6),
@@ -644,13 +643,56 @@ def _exp_size():
             res["t_G_means"], res["t_LS_means"],
             res["delta_means"], res["delta_stds"])
     ])
-    print(f"  CSV: results/size_experiment.csv")
+    print(f"  CSV: output/experiments/size_experiment.csv")
+    print(f"  Час виконання: {elapsed:.1f} с")
+
+
+def _exp_rho():
+    """Експеримент 3.3.3: вплив частки заборонених клітин rho_F."""
+    _header("Вплив частки заборонених клітин (rho_F)")
+    _ensure_dirs(EXP_DIR)
+    m, n = 12, 12
+    rhos = [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
+    s_F, c1, c2, alpha_B, K2, beta, R = 2, 3, 8, 0.06, 3, 4, 5
+    print(f"  Парк {m}x{n},  s_F=компактна,  c1={c1}, c2={c2},  "
+          f"alpha_B={alpha_B},  K2={K2},  beta={beta},  R={R}")
+    print(f"  D = {rhos}")
+    t0 = time.perf_counter()
+    res = experiment_rho(m, n, rhos, s_F, c1, c2, alpha_B, K2,
+                         beta=beta, R=R)
+    elapsed = time.perf_counter() - t0
+    print(f"\n    rho_F |  Q жадібний  |  Q лок.пошук  |  delta, %  ± sigma, %")
+    print(f"  --------|--------------|---------------|---------------------")
+    for rho, qg, qls, dm, ds in zip(rhos, res["Q_G_means"],
+                                     res["Q_LS_means"],
+                                     res["delta_means"], res["delta_stds"]):
+        print(f"  {rho:.2f}    |  {qg:>7.2f}     |   {qls:>7.2f}     |  "
+              f"{100*dm:>+6.3f} ± {100*ds:.3f}")
+    try:
+        plot_rho_experiment(rhos, res["Q_G_means"], res["Q_LS_means"],
+                            res["delta_means"], res["delta_stds"],
+                            filepath=os.path.join(EXP_DIR, "exp_rho.png"),
+                            problem_info=f"{m}x{n}, beta={beta}, R={R}")
+        print(f"\n  PNG: output/experiments/exp_rho.png")
+    except Exception:
+        pass
+    _write_csv(os.path.join(EXP_DIR, "rho_experiment.csv"), [
+        {"rho_F": rho, "Q_G_mean": round(qg, 4),
+         "Q_LS_mean": round(qls, 4),
+         "delta_pct": round(100 * dm, 4),
+         "delta_std_pct": round(100 * ds, 4)}
+        for rho, qg, qls, dm, ds in zip(rhos, res["Q_G_means"],
+                                         res["Q_LS_means"],
+                                         res["delta_means"],
+                                         res["delta_stds"])
+    ])
+    print(f"  CSV: output/experiments/rho_experiment.csv")
     print(f"  Час виконання: {elapsed:.1f} с")
 
 
 def _exp_structure():
     _header("Вплив структури заборонених зон")
-    _ensure_dirs(RESULTS_DIR, EXP_DIR)
+    _ensure_dirs(EXP_DIR)
     m, n, rho_F = 12, 12, 0.12
     c1, c2, alpha_B, K2, beta, R = 3, 8, 0.10, 5, 4, 3
     s_fs = [1, 2, 3, 4]
@@ -670,31 +712,32 @@ def _exp_structure():
         plot_structure_experiment(s_fs, res["names"],
                                   res["Q_G_means"], res["Q_LS_means"],
                                   res["delta_means"], res["delta_stds"],
-                                  filepath=os.path.join(RESULTS_DIR, "exp_structure.png"),
+                                  filepath=os.path.join(EXP_DIR, "exp_structure.png"),
                                   problem_info=f"{m}×{n}, R={R}")
-        print(f"\n  PNG: results/exp_structure.png")
+        print(f"\n  PNG: output/experiments/exp_structure.png")
     except Exception:
         pass
-    _write_csv(os.path.join(RESULTS_DIR, "structure_experiment.csv"), [
+    _write_csv(os.path.join(EXP_DIR, "structure_experiment.csv"), [
         {"structure": name, "Q_G_mean": round(qg, 4),
          "Q_LS_mean": round(qls, 4), "delta_pct": round(100 * dm, 4)}
         for name, qg, qls, dm, _ in zip(res["names"], res["Q_G_means"],
                                           res["Q_LS_means"],
                                           res["delta_means"], res["delta_stds"])
     ])
-    print(f"  CSV: results/structure_experiment.csv")
+    print(f"  CSV: output/experiments/structure_experiment.csv")
     print(f"  Час виконання: {elapsed:.1f} с")
 
 
 def run_all_experiments():
-    """Запустити всі 5 експериментів послідовно (без пауз)."""
+    """Запустити всі 6 експериментів послідовно (без пауз)."""
     _exp_individual()
     _exp_imax()
+    _exp_rho()
     _exp_budget()
     _exp_size()
     _exp_structure()
     print("\n  Всі експерименти завершено.")
-    print(f"  CSV та PNG збережено у: results/")
+    print(f"  CSV та PNG збережено у: output/experiments/ та output/tasks/")
 
 
 def _menu_experiments():
@@ -702,13 +745,14 @@ def _menu_experiments():
         _header("Підменю проведення експериментів")
         print()
         print("  1. Розв'язати 4 індивідуальні задачі")
-        print("  2. Дослідити вплив параметра I_max")
-        print("  3. Дослідити вплив бюджету")
-        print("  4. Дослідити вплив розмірності парку")
-        print("  5. Дослідити вплив структури заборонених зон")
-        print("  6. Виконати всі експерименти")
+        print("  2. Дослідити вплив параметра I_max (β)")
+        print("  3. Дослідити вплив частки заборонених клітин ρ_F")
+        print("  4. Дослідити вплив бюджету (α_B)")
+        print("  5. Дослідити вплив розмірності парку")
+        print("  6. Дослідити вплив структури заборонених зон")
+        print("  7. Виконати всі експерименти")
         print("  0. Повернутися в головне меню")
-        ch = _choose(6)
+        ch = _choose(7)
         if ch == 0:
             return
         if ch == 1:
@@ -716,12 +760,14 @@ def _menu_experiments():
         elif ch == 2:
             _exp_imax()
         elif ch == 3:
-            _exp_budget()
+            _exp_rho()
         elif ch == 4:
-            _exp_size()
+            _exp_budget()
         elif ch == 5:
-            _exp_structure()
+            _exp_size()
         elif ch == 6:
+            _exp_structure()
+        elif ch == 7:
             print("  Увага: виконання займе кілька хвилин.")
             run_all_experiments()
         _pause()
