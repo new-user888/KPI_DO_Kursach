@@ -204,7 +204,7 @@ PNG-плани зберігаються у `output/tasks/last_greedy.png` і `ou
   0. Повернутися в головне меню
 ```
 
-Кожен експеримент виводить звіт у консоль і зберігає CSV та PNG у папку `results/`.
+Кожен експеримент виводить звіт у консоль і зберігає CSV та PNG у папку `output/experiments/`.
 Всі числові результати обчислюються програмно.
 
 | N | Що досліджується | Параметр, що змінюється | CSV | PNG |
@@ -384,7 +384,7 @@ print(p.info())
 from menu import run_all_experiments
 
 run_all_experiments()
-# CSV та PNG зберігаються у папці results/
+# CSV та PNG зберігаються у папці output/experiments/
 ```
 
 ---
@@ -396,16 +396,16 @@ run_all_experiments()
 | `output/tasks/task1_park.png` ... `task4_park.png` | плани парків | меню, пункт 3 варіант 1 |
 | `output/tasks/task1_greedy.png` ... | розв'язки жадібного | меню, пункт 3 варіант 1 |
 | `output/tasks/task1_local_search.png` ... | розв'язки ЛП | меню, пункт 3 варіант 1 |
+| `output/tasks/individual_tasks.csv` | зведена таблиця 4 задач | меню, пункт 3 варіант 1 |
 | `output/tasks/last_greedy.png` | останній жадібний | меню, пункт 2 |
 | `output/tasks/last_local_search.png` | останній ЛП | меню, пункт 2 |
-| `results/individual_tasks.csv` | зведена таблиця 4 задач | меню, пункт 3 варіант 1 |
-| `results/beta_experiment.csv` | вплив I\_max | меню, пункт 3 варіант 2 |
-| `results/rho_experiment.csv` | вплив частки F (п. 3.3.3) | меню, пункт 3 варіант 3 |
-| `results/budget_experiment.csv` | вплив бюджету | меню, пункт 3 варіант 4 |
-| `results/size_experiment.csv` | вплив розмірності | меню, пункт 3 варіант 5 |
-| `results/structure_experiment.csv` | вплив структури F | меню, пункт 3 варіант 6 |
-| `results/exp_beta.png` | графік I\_max | меню, пункт 3 варіант 2 |
-| `results/exp_rho.png` | графік rho\_F (п. 3.3.3) | меню, пункт 3 варіант 3 |
-| `results/exp_budget.png` | графік бюджету | меню, пункт 3 варіант 4 |
-| `results/exp_size.png` | графік розмірності | меню, пункт 3 варіант 5 |
-| `results/exp_structure.png` | графік структури F | меню, пункт 3 варіант 6 |
+| `output/experiments/beta_experiment.csv` | вплив I\_max | меню, пункт 3 варіант 2 |
+| `output/experiments/exp_beta.png` | графік I\_max | меню, пункт 3 варіант 2 |
+| `output/experiments/rho_experiment.csv` | вплив частки F (п. 3.3.3) | меню, пункт 3 варіант 3 |
+| `output/experiments/exp_rho.png` | графік rho\_F (п. 3.3.3) | меню, пункт 3 варіант 3 |
+| `output/experiments/budget_experiment.csv` | вплив бюджету | меню, пункт 3 варіант 4 |
+| `output/experiments/exp_budget.png` | графік бюджету | меню, пункт 3 варіант 4 |
+| `output/experiments/size_experiment.csv` | вплив розмірності | меню, пункт 3 варіант 5 |
+| `output/experiments/exp_size.png` | графік розмірності | меню, пункт 3 варіант 5 |
+| `output/experiments/structure_experiment.csv` | вплив структури F | меню, пункт 3 варіант 6 |
+| `output/experiments/exp_structure.png` | графік структури F | меню, пункт 3 варіант 6 |
