@@ -26,16 +26,16 @@ park_lighting/
 |   +-- algorithms.py    жадібний алгоритм і локальний пошук
 |   +-- generator.py     генератор задач (4 типи структур, seed)
 |   +-- tasks.py         4 індивідуальні задачі (підрозділ 1.2)
-|   +-- experiments.py   функції для 6 числових експериментів
+|   +-- experiments.py   5 функцій-експериментів на згенерованих задачах
 |   +-- visualize.py     побудова рисунків через matplotlib
 |
 +-- menu.py              консольне меню — вся логіка взаємодії
 +-- main.py              точка входу (викликає menu.run())
 |
-+-- output/              створюється автоматично
-|   +-- tasks/           PNG для індивідуальних задач
-|   +-- experiments/     PNG при пакетному запуску
-|
++-- output/              створюється автоматично під час роботи
+|   +-- tasks/           PNG-плани 4 задач, individual_tasks.csv,
+|   |                    last_greedy.png і last_local_search.png
+|   +-- experiments/     CSV та PNG усіх 5 числових експериментів
 |
 +-- README.md
 ```
